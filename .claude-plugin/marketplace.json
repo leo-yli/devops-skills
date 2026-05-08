@@ -8,16 +8,7 @@
     {
       "name": "devops-skills",
       "description": "DevOps platform skills collection for CI/CD pipeline management, Git repository maintenance, and deployment workflows",
-      "source": "./",
-      "skills": [
-        "./skills/pipeline-runner",
-        "./skills/pipeline-stopper",
-        "./skills/pipeline-status",
-        "./skills/pipeline-analyzer",
-        "./skills/git-cleanup",
-        "./skills/deploy-checker",
-        "./skills/deploy-workflow"
-      ]
+      "source": "./"
     }
   ]
 }

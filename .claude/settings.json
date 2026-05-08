@@ -3,9 +3,11 @@
     "devops-skills": {
       "source": {
         "source": "github",
-        "owner": "leo-yli",
-        "repo": "devops-skills"
+        "repo": "leo-yli/devops-skills"
       }
     }
+  },
+  "enabledPlugins": {
+    "devops-skills@devops-skills": true
   }
 }
