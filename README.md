@@ -20,6 +20,12 @@ Claude Code 技能集合，用于 CI/CD 流水线管理、Git 仓库维护和部
 
 ## 安装
 
+### 先决条件
+
+- [Node.js](https://nodejs.org/) >= 18
+- [Git](https://git-scm.com/)
+- Claude Code 已安装并配置
+
 ### 第一步：安装 devops-cli
 
 这些 skills 依赖 `devops-cli` (`dops` 命令) 执行实际操作。
@@ -28,43 +34,57 @@ Claude Code 技能集合，用于 CI/CD 流水线管理、Git 仓库维护和部
 # 检查是否已安装
 dops --version
 
-# 未安装则执行
+# 未安装则执行以下任一命令
 npm install -g devops-cli
 # 或: pnpm add -g devops-cli
 # 或: yarn global add devops-cli
 ```
 
-安装后登录 DevOps 平台：
+验证安装：
 
 ```bash
-dops auth login --host https://ci.jlpay.com
+dops --version
+# 应输出版本号，如: 2.5.1
 ```
+
+登录 DevOps 平台：
+
+```bash
+dops auth login --host <your-devops-host>
+```
+
+> 替换 `<your-devops-host>` 为你的 DevOps 平台地址，如 `https://ci.example.com`。
 
 ### 第二步：安装 devops-skills
 
 选择以下任一方式安装。
 
-#### 方式一：项目本地安装（最简单）
+#### 方式一：项目本地安装（推荐，最简单）
 
 将本项目的 `skills/` 目录放到你的项目根目录，Claude Code 会自动识别。
 
 **macOS / Linux：**
+
 ```bash
 # 符号链接（推荐，更新只需 pull 一次）
-git clone https://github.com/your-org/devops-skills.git ~/tools/devops-skills
+git clone https://github.com/leo-yli/devops-skills.git ~/tools/devops-skills
 cd your-project
 ln -s ~/tools/devops-skills/skills ./skills
 ```
 
-**Windows：**
+**Windows（需要管理员权限）：**
+
 ```powershell
-# 符号链接（推荐）
-git clone https://github.com/your-org/devops-skills.git C:\tools\devops-skills
+# 以管理员身份运行 PowerShell，然后执行：
+git clone https://github.com/leo-yli/devops-skills.git C:\tools\devops-skills
 cd your-project
 New-Item -ItemType SymbolicLink -Path skills -Target C:\tools\devops-skills\skills
 ```
 
+> Windows 创建符号链接需要管理员权限。如果无法使用符号链接，也可以直接复制 `skills` 目录，但更新时需要手动同步。
+
 **项目结构：**
+
 ```
 my-project/
 ├── src/
@@ -79,18 +99,19 @@ my-project/
 
 #### 方式二：插件市场安装（全局可用）
 
-将 devops-skills 发布到 GitHub 后，在 Claude Code 中全局安装，所有项目共享。
+所有项目共享，无需在每个项目重复配置。
 
-1. 打开 Claude Code Settings
+1. 打开 Claude Code，按 `Ctrl + Shift + P`（或 `Cmd + Shift + P`）打开设置
 2. 添加 marketplace 源：
    ```json
    {
      "extraKnownMarketplaces": [
-       "https://github.com/your-org/devops-skills"
+       "https://github.com/leo-yli/devops-skills"
      ]
    }
    ```
-3. 重启 Claude Code，在插件市场安装 "devops-skills"
+3. 重启 Claude Code
+4. 在插件市场搜索并安装 "devops-skills"
 
 ---
 
