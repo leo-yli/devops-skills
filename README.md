@@ -97,21 +97,29 @@ my-project/
     └── ...
 ```
 
-#### 方式二：插件市场安装（全局可用）
+#### 方式二：Plugin 安装（全局可用）
 
 所有项目共享，无需在每个项目重复配置。
 
-1. 打开 Claude Code，按 `Ctrl + Shift + P`（或 `Cmd + Shift + P`）打开设置
-2. 添加 marketplace 源：
+1. 打开 Claude Code 全局设置文件 `~/.claude/settings.json`
+2. 添加 marketplace 源并启用 plugin：
    ```json
    {
-     "extraKnownMarketplaces": [
-       "https://github.com/leo-yli/devops-skills"
-     ]
+     "extraKnownMarketplaces": {
+       "devops-skills": {
+         "source": {
+           "source": "github",
+           "repo": "leo-yli/devops-skills"
+         }
+       }
+     },
+     "enabledPlugins": {
+       "devops-skills@devops-skills": true
+     }
    }
    ```
-3. 重启 Claude Code
-4. 在插件市场搜索并安装 "devops-skills"
+3. 保存配置并完全重启 Claude Code
+4. 运行 `/skills` 确认 devops-skills 已加载
 
 ---
 

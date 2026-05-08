@@ -1,0 +1,11 @@
+{
+  "extraKnownMarketplaces": {
+    "devops-skills": {
+      "source": {
+        "source": "github",
+        "owner": "leo-yli",
+        "repo": "devops-skills"
+      }
+    }
+  }
+}
