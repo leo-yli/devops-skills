@@ -18,36 +18,65 @@ Claude Code 技能集合，用于 CI/CD 流水线管理、Git 仓库维护和部
 
 ---
 
+## 快速开始
+
+```bash
+# 1. 安装 CLI 工具
+npm install -g devops-cli
+
+# 2. 登录 DevOps 平台
+dops auth login --host https://ci.example.com
+
+# 3. 从 GitHub 克隆 skills 仓库
+git clone https://github.com/leo-yli/devops-skills.git
+
+# 4. 将 skills 链接到你的项目
+cd your-project
+# macOS/Linux:
+ln -s /path/to/devops-skills/skills ./skills
+# Windows（管理员 PowerShell）:
+# New-Item -ItemType SymbolicLink -Path skills -Target C:\path\to\devops-skills\skills
+```
+
+完成后在 Claude Code 中输入：`"帮我运行流水线"`
+
+---
+
 ## 安装
 
 ### 先决条件
 
-- [Node.js](https://nodejs.org/) >= 18
-- [Git](https://git-scm.com/)
-- Claude Code 已安装并配置
+| 依赖 | 版本要求 | 用途 |
+|------|---------|------|
+| [Node.js](https://nodejs.org/) | >= 18 | 运行 `devops-cli` |
+| [Git](https://git-scm.com/) | 任意 | 克隆仓库 |
+| Claude Code | 最新版 | 加载 skills |
 
 ### 第一步：安装 devops-cli
 
-这些 skills 依赖 `devops-cli` (`dops` 命令) 执行实际操作。
+`devops-skills` 依赖 `devops-cli` (`dops` 命令) 执行实际操作。
+
+**安装：**
 
 ```bash
-# 检查是否已安装
-dops --version
-
-# 未安装则执行以下任一命令
+# 使用 npm
 npm install -g devops-cli
-# 或: pnpm add -g devops-cli
-# 或: yarn global add devops-cli
+
+# 或使用 pnpm
+pnpm add -g devops-cli
+
+# 或使用 yarn
+yarn global add devops-cli
 ```
 
-验证安装：
+**验证安装：**
 
 ```bash
 dops --version
 # 应输出版本号，如: 2.5.1
 ```
 
-登录 DevOps 平台：
+**登录 DevOps 平台：**
 
 ```bash
 dops auth login --host <your-devops-host>
@@ -55,41 +84,55 @@ dops auth login --host <your-devops-host>
 
 > 替换 `<your-devops-host>` 为你的 DevOps 平台地址，如 `https://ci.example.com`。
 
-### 第二步：安装 devops-skills
+**验证登录状态：**
 
-选择以下任一方式安装。
+```bash
+dops auth status
+```
 
-#### 方式一：项目本地安装（推荐，最简单）
+### 第二步：从 GitHub 安装 devops-skills
 
-将本项目的 `skills/` 目录放到你的项目根目录，Claude Code 会自动识别。
+**克隆仓库：**
+
+```bash
+# 克隆到本地工具目录
+git clone https://github.com/leo-yli/devops-skills.git
+```
+
+**安装方式（二选一）：**
+
+| 方式 | 适用场景 | 特点 |
+|------|---------|------|
+| **项目本地安装** | 特定项目使用 | 将 `skills` 目录链接到项目根目录 |
+| **全局安装** | 所有项目共享 | 通过 Claude Code 设置从 GitHub 加载 |
+
+#### 方式 A：项目本地安装（推荐）
+
+将 `skills/` 目录放到你的项目根目录，Claude Code 会自动识别。
 
 **macOS / Linux：**
 
 ```bash
-# 符号链接（推荐，更新只需 pull 一次）
-git clone https://github.com/leo-yli/devops-skills.git ~/tools/devops-skills
 cd your-project
-ln -s ~/tools/devops-skills/skills ./skills
+ln -s /path/to/devops-skills/skills ./skills
 ```
 
-**Windows（需要管理员权限）：**
+**Windows：**
 
 ```powershell
-# 以管理员身份运行 PowerShell，然后执行：
-git clone https://github.com/leo-yli/devops-skills.git C:\tools\devops-skills
 cd your-project
-New-Item -ItemType SymbolicLink -Path skills -Target C:\tools\devops-skills\skills
+New-Item -ItemType SymbolicLink -Path skills -Target C:\path\to\devops-skills\skills
 ```
 
-> Windows 创建符号链接需要管理员权限。如果无法使用符号链接，也可以直接复制 `skills` 目录，但更新时需要手动同步。
+> **注意**：Windows 创建符号链接需要管理员权限。如果无法获取，可直接复制 `skills` 目录到项目根目录。
 
-**项目结构：**
+**安装后项目结构：**
 
 ```
 my-project/
 ├── src/
 ├── package.json
-└── skills/                      ← 指向 devops-skills/skills
+└── skills/                      ← 符号链接或目录
     ├── pipeline-runner/
     │   └── SKILL.md
     ├── deploy-workflow/
@@ -97,12 +140,13 @@ my-project/
     └── ...
 ```
 
-#### 方式二：Plugin 安装（全局可用）
+#### 方式 B：全局安装（所有项目共享）
 
-所有项目共享，无需在每个项目重复配置。
+1. 打开 Claude Code 全局设置文件：
+   - macOS/Linux: `~/.claude/settings.json`
+   - Windows: `%USERPROFILE%\.claude\settings.json`
 
-1. 打开 Claude Code 全局设置文件 `~/.claude/settings.json`
-2. 添加 marketplace 源并启用 plugin：
+2. 添加 GitHub 源并启用：
    ```json
    {
      "extraKnownMarketplaces": {
@@ -118,8 +162,16 @@ my-project/
      }
    }
    ```
-3. 保存配置并完全重启 Claude Code
+
+3. 保存配置并**完全重启** Claude Code
+
 4. 运行 `/skills` 确认 devops-skills 已加载
+
+### 第三步：验证安装
+
+1. **检查 skill 是否加载**：在 Claude Code 中运行 `/skills`，确认 `devops-skills` 出现在列表中
+2. **测试命令**：输入 `"查看流水线状态"`，应能正常响应
+3. **检查 dops 连接**：输入 `"检查 devops 连接"`，Claude 会自动验证 `dops` 可用性
 
 ---
 
