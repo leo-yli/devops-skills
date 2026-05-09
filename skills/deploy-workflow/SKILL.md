@@ -50,11 +50,13 @@ dops auth login --host <host-url>
 ## Required Information
 
 1. **Demand Scheme ID** (optional) — The project to deploy
-2. **Pipeline Name** (optional) — Specific pipeline name (e.g. `acc-account`), or auto-detect all
+2. **Pipeline Name** (optional) — Specific pipeline name (e.g. `acc-account`), or auto-detect from `package.json`. If not provided, automatically detected from `package.json` name field in current directory
 3. **Environment** (optional) — Target environment. Default: `staging`
 4. **Wait** (optional) — Wait for completion. Default: `true`
 
 > **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
+
+> **Pipeline Name Auto-Detection:** If `pipelineName` is not provided, the skill will automatically read the `name` field from `package.json` in the current directory and use it as the pipeline name.
 
 ## Execution
 

@@ -48,16 +48,30 @@ dops auth login --host <host-url>
 
 ## Required Information
 
-1. **Pipeline Name** (required) — The pipeline to abort, e.g. `acc-account`
+1. **Pipeline Name** (optional) — The pipeline to abort, e.g. `acc-account`. If not provided, automatically detected from `package.json` name field in current directory
 2. **Demand Scheme ID** (optional) — For project-scoped pipelines
 3. **Force** (optional) — Skip confirmation prompt
 4. **All** (optional) — Abort all running instances of this pipeline
 
 > **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
 
+> **Pipeline Name Auto-Detection:** If `pipelineName` is not provided, the skill will automatically read the `name` field from `package.json` in the current directory and use it as the pipeline name. If `package.json` does not exist or does not contain a valid `name`, the user will be prompted to provide the pipeline name.
+
 ## Execution
 
 Always use `--json` flag. Use `--param key=value` format for parameters.
+
+### Pipeline Name Resolution
+
+If `pipelineName` is not provided by the user, automatically detect it:
+
+1. Read `package.json` from the current directory
+2. Extract the `name` field value
+3. Use it as the pipeline name
+
+If `package.json` does not exist or does not contain a valid `name`, prompt the user to provide the pipeline name.
+
+### Command Execution
 
 ```bash
 dops --json skill run pipeline-stopper --param pipelineName=<name> [options]

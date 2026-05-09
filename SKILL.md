@@ -82,6 +82,16 @@ If the user doesn't know a pipeline name:
 dops --json pipeline list
 ```
 
+### Auto-Detecting Pipeline Name
+
+For all pipeline-related skills, if `pipelineName` is not provided by the user, the skill will automatically:
+
+1. Read `package.json` from the current directory
+2. Extract the `name` field value
+3. Use it as the pipeline name
+
+This means users can simply say "帮我运行流水线" without specifying a name, and it will use the project name from `package.json`.
+
 ### Authentication
 
 If commands fail with auth errors:

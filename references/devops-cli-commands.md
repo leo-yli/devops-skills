@@ -35,7 +35,7 @@ Trigger a pipeline build.
 
 ```bash
 dops --json skill run pipeline-runner \
-  --param pipelineName=<name> \
+  [--param pipelineName=<name>] \
   [--param demandSchemeId=<id>] \
   [--param branch=<branch>] \
   [--param environment=<dev|test|staging|prod>] \
@@ -44,7 +44,7 @@ dops --json skill run pipeline-runner \
   [--param timeout=<minutes>]
 ```
 
-**Required:** `pipelineName`
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 **Defaults:** `wait=false`, `timeout=10`
 
 ### pipeline-stopper
@@ -52,26 +52,26 @@ Abort a running pipeline.
 
 ```bash
 dops --json skill run pipeline-stopper \
-  --param pipelineName=<name> \
+  [--param pipelineName=<name>] \
   [--param demandSchemeId=<id>] \
   [--param force=true] \
   [--param all=true]
 ```
 
-**Required:** `pipelineName`
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 
 ### pipeline-analyzer
 Analyze pipeline execution history.
 
 ```bash
 dops --json skill run pipeline-analyzer \
-  --param pipelineName=<name> \
+  [--param pipelineName=<name>] \
   [--param demandSchemeId=<id>] \
   [--param limit=<number>] \
   [--param focus=<all|failures|duration>]
 ```
 
-**Required:** `pipelineName`
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 **Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
 **Defaults:** `limit=10`, `focus=all`
 
@@ -80,7 +80,7 @@ Query pipeline status and history.
 
 ```bash
 dops --json skill run pipeline-status \
-  --param pipelineName=<name> \
+  [--param pipelineName=<name>] \
   [--param demandSchemeId=<id>] \
   [--param buildId=<id>] \
   [--param history=<count>] \
@@ -88,7 +88,7 @@ dops --json skill run pipeline-status \
   [--param interval=<seconds>]
 ```
 
-**Required:** `pipelineName`
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 **Defaults:** `history=5`, `watch=false`, `interval=5`
 
 ## Git Skills
@@ -121,6 +121,7 @@ dops --json skill run deploy-checker \
 
 **Required:** none
 **Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 **Defaults:** `environment=staging`
 
 ### deploy-workflow
@@ -136,6 +137,7 @@ dops --json skill run deploy-workflow \
 
 **Required:** none
 **Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
+**Auto-Detection:** If `pipelineName` is not provided, automatically read from `package.json` `name` field in current directory
 **Defaults:** `environment=staging`, `wait=true`
 
 ## Parameter Mapping

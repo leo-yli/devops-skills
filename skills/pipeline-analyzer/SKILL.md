@@ -48,16 +48,30 @@ dops auth login --host <host-url>
 
 ## Required Information
 
-1. **Pipeline Name** (required) — e.g. `acc-account`
+1. **Pipeline Name** (optional) — e.g. `acc-account`. If not provided, automatically detected from `package.json` name field in current directory
 2. **Demand Scheme ID** (optional) — For project-scoped queries
 3. **Limit** (optional) — Number of records to analyze. Default: 10
 4. **Focus** (optional) — `all`, `failures`, or `duration`. Default: `all`
 
 > **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
 
+> **Pipeline Name Auto-Detection:** If `pipelineName` is not provided, the skill will automatically read the `name` field from `package.json` in the current directory and use it as the pipeline name. If `package.json` does not exist or does not contain a valid `name`, the user will be prompted to provide the pipeline name.
+
 ## Execution
 
 Always use `--json` flag. Use `--param key=value` format.
+
+### Pipeline Name Resolution
+
+If `pipelineName` is not provided by the user, automatically detect it:
+
+1. Read `package.json` from the current directory
+2. Extract the `name` field value
+3. Use it as the pipeline name
+
+If `package.json` does not exist or does not contain a valid `name`, prompt the user to provide the pipeline name.
+
+### Command Execution
 
 ```bash
 dops --json skill run pipeline-analyzer \
