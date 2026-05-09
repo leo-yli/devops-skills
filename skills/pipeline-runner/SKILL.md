@@ -50,7 +50,7 @@ dops auth login --host <host-url>
 ## Required Information
 
 Before running, collect from the user:
-1. **Pipeline Name** (optional) — The pipeline name, e.g. `acc-account`. If not provided, automatically detected from `package.json` name field in current directory
+1. **Pipeline Name** (optional) — The pipeline name, e.g. `acc-account`. If not provided, automatically detected from current directory name
 2. **Demand Scheme ID** (optional) — For project-scoped pipelines
 3. **Branch** (optional) — Override default branch
 4. **Environment** (optional) — `dev`, `test`, `staging`, `prod`
@@ -58,7 +58,7 @@ Before running, collect from the user:
 
 > **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
 
-> **Pipeline Name Auto-Detection:** If `pipelineName` is not provided, the skill will automatically read the `name` field from `package.json` in the current directory and use it as the pipeline name. If `package.json` does not exist or does not contain a valid `name`, the user will be prompted to provide the pipeline name.
+> **Pipeline Name Auto-Detection:** If `pipelineName` is not provided, the skill will automatically use the current directory name as the pipeline name. If you are not in the correct project directory, either switch to the project directory or provide the pipeline name explicitly.
 
 ## Execution
 
@@ -68,18 +68,15 @@ Always use `--json` flag for machine-parseable output.
 
 If `pipelineName` is not provided by the user, automatically detect it:
 
-1. Read `package.json` from the current directory
-2. Extract the `name` field value
-3. Use it as the pipeline name
+1. Get the current directory name
+2. Use it as the pipeline name
 
 **Implementation:**
 ```bash
 # Check if pipelineName was provided by user
-# If not, read from package.json
+# If not, use current directory name
 if [ -z "$pipelineName" ]; then
-    if [ -f "package.json" ]; then
-        pipelineName=$(cat package.json | grep -o '"name"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
-    fi
+    pipelineName=$(basename "$(pwd)")
 fi
 ```
 
