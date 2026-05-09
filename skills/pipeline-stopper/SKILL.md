@@ -53,6 +53,8 @@ dops auth login --host <host-url>
 3. **Force** (optional) — Skip confirmation prompt
 4. **All** (optional) — Abort all running instances of this pipeline
 
+> **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
+
 ## Execution
 
 Always use `--json` flag. Use `--param key=value` format for parameters.

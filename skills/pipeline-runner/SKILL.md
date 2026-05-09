@@ -56,6 +56,8 @@ Before running, collect from the user:
 4. **Environment** (optional) — `dev`, `test`, `staging`, `prod`
 5. **Wait for completion** (optional) — Default: no
 
+> **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
+
 ## Execution
 
 Always use `--json` flag for machine-parseable output.

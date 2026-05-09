@@ -49,9 +49,11 @@ dops auth login --host <host-url>
 ## Required Information
 
 1. **Pipeline Name** (required) — e.g. `acc-account`
-2. **Demand Scheme ID** (required)
+2. **Demand Scheme ID** (optional) — For project-scoped queries
 3. **Limit** (optional) — Number of records to analyze. Default: 10
 4. **Focus** (optional) — `all`, `failures`, or `duration`. Default: `all`
+
+> **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
 
 ## Execution
 
@@ -60,7 +62,7 @@ Always use `--json` flag. Use `--param key=value` format.
 ```bash
 dops --json skill run pipeline-analyzer \
   --param pipelineName=<name> \
-  --param demandSchemeId=<id> \
+  [--param demandSchemeId=<id>] \
   [--param limit=<number>] \
   [--param focus=<all|failures|duration>]
 ```
@@ -111,7 +113,8 @@ Parse JSON and present as:
 
 | Scenario | Action |
 |----------|--------|
-| Missing pipeline-id or demand-scheme-id | Ask user for it |
+| Missing pipelineName | Ask user for it |
+| Auto-resolution fails | Ask user to provide `--param demandSchemeId=<id>` explicitly |
 | Pipeline not found | Suggest checking ID or running `dops pipeline list` |
 | Not authenticated | Suggest `dops auth login` |
 | No build history | Report "no records found" gracefully |

@@ -55,6 +55,8 @@ dops auth login --host <host-url>
 5. **Watch** (optional) — Continuous monitoring. Default: false
 6. **Interval** (optional) — Refresh interval in seconds. Default: 5
 
+> **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
+
 ## Execution
 
 Always use `--json` flag. Use `--param key=value` format.

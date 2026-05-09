@@ -246,7 +246,7 @@ Claude Code:
 | 参数 | 类型 | 必填 | 默认值 | 说明 |
 |---|---|---|---|---|
 | `pipelineName` | string | 是 | - | 流水线名称 |
-| `demandSchemeId` | number | 是 | - | 需求项目 ID |
+| `demandSchemeId` | number | 否 | - | 需求项目 ID（feature 分支自动解析） |
 | `limit` | number | 否 | 10 | 分析最近多少次执行记录 |
 | `focus` | string | 否 | all | 关注重点：all/failures/duration |
 
@@ -275,7 +275,7 @@ Claude Code:
 
 | 参数 | 类型 | 必填 | 默认值 | 说明 |
 |---|---|---|---|---|
-| `demandSchemeId` | number | 是 | - | 需求项目 ID |
+| `demandSchemeId` | number | 否 | - | 需求项目 ID（feature 分支自动解析） |
 | `pipelineName` | string | 否 | - | 流水线名称 |
 | `environment` | string | 否 | staging | 目标环境：dev/staging/prod |
 
@@ -283,7 +283,7 @@ Claude Code:
 
 | 参数 | 类型 | 必填 | 默认值 | 说明 |
 |---|---|---|---|---|
-| `demandSchemeId` | number | 是 | - | 需求项目 ID |
+| `demandSchemeId` | number | 否 | - | 需求项目 ID（feature 分支自动解析） |
 | `pipelineName` | string | 否 | - | 流水线名称 |
 | `environment` | string | 否 | staging | 目标环境：dev/staging/prod |
 | `wait` | boolean | 否 | true | 是否等待构建完成 |

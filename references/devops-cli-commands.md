@@ -66,12 +66,13 @@ Analyze pipeline execution history.
 ```bash
 dops --json skill run pipeline-analyzer \
   --param pipelineName=<name> \
-  --param demandSchemeId=<id> \
+  [--param demandSchemeId=<id>] \
   [--param limit=<number>] \
   [--param focus=<all|failures|duration>]
 ```
 
-**Required:** `pipelineName`, `demandSchemeId`
+**Required:** `pipelineName`
+**Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
 **Defaults:** `limit=10`, `focus=all`
 
 ### pipeline-status
@@ -113,12 +114,13 @@ Run pre-deployment checks.
 
 ```bash
 dops --json skill run deploy-checker \
-  --param demandSchemeId=<id> \
+  [--param demandSchemeId=<id>] \
   [--param pipelineName=<name>] \
   [--param environment=<dev|staging|prod>]
 ```
 
-**Required:** `demandSchemeId`
+**Required:** none
+**Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
 **Defaults:** `environment=staging`
 
 ### deploy-workflow
@@ -126,13 +128,14 @@ Full deployment workflow (check -> trigger -> wait).
 
 ```bash
 dops --json skill run deploy-workflow \
-  --param demandSchemeId=<id> \
+  [--param demandSchemeId=<id>] \
   [--param pipelineName=<name>] \
   [--param environment=<dev|staging|prod>] \
   [--param wait=true|false]
 ```
 
-**Required:** `demandSchemeId`
+**Required:** none
+**Auto-Resolved:** `demandSchemeId` is auto-resolved from `feature/<id>` branch if omitted
 **Defaults:** `environment=staging`, `wait=true`
 
 ## Parameter Mapping
@@ -156,6 +159,30 @@ dops --json skill run deploy-workflow \
 | history / count / limit | `--param history=<count>` |
 | watch / monitor | `--param watch=true` |
 | interval / refresh | `--param interval=<seconds>` |
+
+## Demand Scheme Resolution
+
+### Resolve by keyword (缩略 demand-id)
+
+If you only know part of the demand scheme ID (e.g. `1081265`), use the resolve command to find the full demand scheme:
+
+```bash
+dops schemes demand resolve 1081265
+```
+
+This searches across all projects for demand schemes matching the keyword and returns the best match.
+
+### Auto-Resolution from Git Branch
+
+All pipeline and deploy skills automatically resolve `demandSchemeId` when the current Git branch matches `feature/<number>` (e.g. `feature/1081265`).
+
+```bash
+# On branch feature/1081265 — demandSchemeId is auto-resolved
+git checkout feature/1081265
+dops --json skill run pipeline-runner --param pipelineName=acc-account
+```
+
+If the current branch is **not** a `feature/<number>` branch, you must explicitly provide `--param demandSchemeId=<id>`.
 
 ## Finding Pipeline Names
 

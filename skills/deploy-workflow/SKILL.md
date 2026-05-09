@@ -49,10 +49,12 @@ dops auth login --host <host-url>
 
 ## Required Information
 
-1. **Demand Scheme ID** (required) — The project to deploy
+1. **Demand Scheme ID** (optional) — The project to deploy
 2. **Pipeline Name** (optional) — Specific pipeline name (e.g. `acc-account`), or auto-detect all
 3. **Environment** (optional) — Target environment. Default: `staging`
 4. **Wait** (optional) — Wait for completion. Default: `true`
+
+> **Auto-Resolution:** If the current Git branch matches `feature/<number>` (e.g. `feature/1081265`), the demand scheme ID is automatically inferred from the branch name. You only need to provide `--param demandSchemeId=<id>` when not on a feature branch or when the auto-resolution fails.
 
 ## Execution
 
@@ -60,7 +62,7 @@ Always use `--json` flag. Use `--param key=value` format.
 
 ```bash
 dops --json skill run deploy-workflow \
-  --param demandSchemeId=<id> \
+  [--param demandSchemeId=<id>] \
   [--param pipelineName=<name>] \
   [--param environment=<dev|staging|prod>] \
   [--param wait=true|false]
@@ -139,7 +141,8 @@ For `--environment prod`:
 
 | Scenario | Action |
 |----------|--------|
-| Missing demand-scheme-id | Ask user for it |
+| Missing demandSchemeId (and not on feature branch) | Ask user for it or suggest switching to a `feature/<number>` branch |
+| Auto-resolution fails | Ask user to provide `--param demandSchemeId=<id>` explicitly |
 | Demand scheme not found | Report "project not found", verify ID |
 | Check step fails | Stop workflow, report check failures, do not deploy |
 | Trigger step fails | Report "deployment failed to start" with error details |
