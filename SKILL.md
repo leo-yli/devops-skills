@@ -76,21 +76,70 @@ Each sub-skill contains:
 
 ### Finding Pipeline Names
 
-If the user doesn't know a pipeline name:
+If auto-detection fails and the user doesn't know a pipeline name:
 
 ```bash
 dops --json pipeline list
 ```
 
-### Auto-Detecting Pipeline Name
+### Auto-Detection Rules
 
-For all pipeline-related skills, if `pipelineName` is not provided by the user, the skill will automatically:
+For all pipeline-related skills, if a parameter is not provided by the user, you MUST run auto-detection BEFORE asking the user:
 
-1. Read `package.json` from the current directory
-2. Extract the `name` field value
-3. Use it as the pipeline name
+#### Pipeline Name Auto-Detection
 
-This means users can simply say "帮我运行流水线" without specifying a name, and it will use the project name from `package.json`.
+1. Read `package.json` `name` field (preferred)
+2. Fallback to current directory name
+
+**Commands:**
+
+**On Windows (PowerShell):**
+```powershell
+# Try package.json first
+$pipelineName = (Get-Content package.json -Raw | ConvertFrom-Json).name
+# Fallback to directory name
+if (-not $pipelineName) { $pipelineName = Split-Path -Leaf (Get-Location) }
+```
+
+**On macOS/Linux (Bash):**
+```bash
+# Try package.json first
+pipelineName=$(cat package.json 2>/dev/null | grep '"name"' | head -1 | cut -d'"' -f4)
+# Fallback to directory name
+if [ -z "$pipelineName" ]; then pipelineName=$(basename "$PWD"); fi
+```
+
+#### Demand Scheme ID Auto-Detection
+
+1. Extract the short number from current Git branch (`feature/<number>`)
+2. Resolve the real demand scheme ID using `dops schemes demand resolve`
+
+**On Windows (PowerShell):**
+```powershell
+$branch = git rev-parse --abbrev-ref HEAD
+# Step 1: Extract short number from feature/12345 pattern
+if ($branch -match "feature/(\d+)") {
+    $shortId = $matches[1]
+    # Step 2: Resolve real demand scheme ID
+    $result = dops --json schemes demand resolve $shortId | ConvertFrom-Json
+    $demandSchemeId = $result.id
+}
+```
+
+**On macOS/Linux (Bash):**
+```bash
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+# Step 1: Extract short number from feature/12345 pattern
+if [[ "$branch" =~ feature/([0-9]+) ]]; then
+    shortId="${BASH_REMATCH[1]}"
+    # Step 2: Resolve real demand scheme ID
+    demandSchemeId=$(dops --json schemes demand resolve "$shortId" | jq -r '.id')
+fi
+```
+
+> **Note:** The number in the branch name (e.g., `1753408` from `feature/1753408`) is a **short demand ID**, not the real demand scheme ID. Always run `dops schemes demand resolve <shortId>` to get the actual ID before passing it to pipeline commands.
+
+**Important:** Only ask the user for values that could NOT be auto-detected. If auto-detection succeeds, use those values directly without prompting.
 
 ### Authentication
 
@@ -111,5 +160,5 @@ response and present results in a user-friendly format.
 |-------|---------|-----|
 | `登录已过期` | Session expired | Run `dops auth login` |
 | `流水线不存在` | Wrong pipeline name | Verify name with `dops pipeline list` |
-| `缺少必要参数` | Missing required param | Check skill SKILL.md for required params |
+| `缺少必要参数` | Missing required param | Run auto-detection first; only ask user if detection fails |
 | `无权限执行此操作` | 403 Forbidden | Check user permissions in DevOpsPlatform |
