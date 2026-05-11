@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "DevOps platform skills for CI/CD pipeline management, Git repository maintenance, and deployment workflows",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "plugins": [
     {
